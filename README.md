@@ -58,8 +58,10 @@ Plik appname.conf unikalny dla każdej aplikacji
 user = <appname>_app
 group = <appname>_app
 listen = /var/run/php-fpm/<appname>_pool.sock
+# listen = 127.0.0.1:9000
 listen.owner = nginx
 listen.group = nginx
+listen.mode = 0660
 ; FPM process manager configuration
 pm = dynamic
 pm.max_children = 50
@@ -98,11 +100,19 @@ php_value session.cookie_samesite="Strict"
 php_value session.gc_maxlifetime="3660"
 ```
 
-### Nginx conf
+### Nginx server conf
 
 ```sh
+location ~ \.php$ {
+  include snippets/fastcgi-php.conf;  
+  fastcgi_pass unix:/var/run/php-fpm/<appname>_pool.sock
+  # fastcgi_pass unix:/run/php-fpm/php8.2-fpm.sock;
+  # fastcgi_pass 127.0.0.1:9000;
+}
+
 upstream php-fpm {
-  server unix:/run/php-fpm/nextcloud_pool.sock;
+  server unix:/var/run/php-fpm/<appname>_pool.sock
+  # server unix:/run/php-fpm/php8.2-fpm.sock;
 }
 ```
 
