@@ -174,9 +174,11 @@ sudo firewall-cmd --get-icmptypes
 sudo firewall-cmd --query-icmp-block=<icmptype>
 # Block
 sudo firewall-cmd --add-icmp-block=<icmptype>
+sudo firewall-cmd --add-icmp-block=echo-reply
 # Remove
 sudo firewall-cmd --remove-icmp-block=<icmptype>
-# Block all
+sudo firewall-cmd --remove-icmp-block=echo-reply
+# Block all (nie działa dla echo-reply)
 sudo firewall-cmd --add-icmp-block-inversion
 sudo firewall-cmd --runtime-to-permanent
 ```
