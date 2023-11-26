@@ -28,6 +28,10 @@ sudo dnf install nginx
 sudo dnf install php-fpm php-cli
 sudo dnf install mariadb-server
 sudo systemctl enable mariadb
+# optional set firewall ban on port 3306
+# sudo mysql_secure_installation
+# Login mysql
+# sudo mysql -u root -p
 ```
 
 ### Add user group for the application
@@ -156,11 +160,15 @@ sudo systemctl status firewalld
 sudo systemctl enable firewalld
 sudo firewall-cmd --state
 
+# Install GUI
+sudo dnf install firewall-config
+
 # List
 sudo firewall-cmd --get-zones
 sudo firewall-cmd --get-default-zone
 sudo firewall-cmd --list-all
 sudo firewall-cmd --list-all --zone=drop
+sudo firewall-cmd --list-ports --zone=drop
 
 # Set drop for all incoming
 sudo firewall-cmd --set-default-zone drop
@@ -181,4 +189,27 @@ sudo firewall-cmd --remove-icmp-block=echo-reply
 # Block all (nie działa dla echo-reply)
 sudo firewall-cmd --add-icmp-block-inversion
 sudo firewall-cmd --runtime-to-permanent
+
+# Open port mysql
+sudo firewall-cmd --permanent --add-port=3306/tcp
+sudo firewall-cmd --permanent --remove-port=3306/tcp
+sudo firewall-cmd --runtime-to-permanent
+
+# Or with
+# sudo iptables -A INPUT -p tcp --dport 3306 -m state --state NEW,ESTABLISHED -j ACCEPT
+```
+
+### Firewall remove rules
+
+```sh
+# Remove all
+sudo rm -rf /etc/firewalld/zones
+sudo rm -rf /etc/firewalld/direct.xml
+sudo iptables -X
+sudo iptables -F
+sudo iptables -Z
+sudo systemctl restart firewalld
+
+# Remove zone
+sudo firewall-cmd --zone=CUSTOM --remove-service=CUSTOM
 ```
