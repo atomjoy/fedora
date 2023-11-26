@@ -48,7 +48,9 @@ sudo chsh -s /bin/nologin <appname>_app
 sudo mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.back
 ```
 
-### Create a custom pool config : sudo nano /etc/php-fpm.d/<appname>.conf
+### Create a custom pool config : sudo nano /etc/php-fpm.d/appname.conf
+
+Plik appname.conf unikalny dla każdej aplikacji
 
 ```sh
 [<appname>_pool]
@@ -186,7 +188,7 @@ sudo firewall-cmd --add-icmp-block=echo-reply
 # Remove
 sudo firewall-cmd --remove-icmp-block=<icmptype>
 sudo firewall-cmd --remove-icmp-block=echo-reply
-# Block all (nie działa dla echo-reply chyba że no to yes :buahahah)
+# Block all (nie działa dla echo-reply chyba że no to yes)
 sudo firewall-cmd --add-icmp-block-inversion
 sudo firewall-cmd --runtime-to-permanent
 
