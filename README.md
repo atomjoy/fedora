@@ -106,12 +106,16 @@ php_value session.gc_maxlifetime="3660"
 location ~ \.php$ {
   include snippets/fastcgi-php.conf;  
   fastcgi_pass unix:/var/run/php-fpm/<appname>_pool.sock
+  # fastcgi_pass unix:/var/run/php-fpm/<appname>_pool.php8.1-fpm.sock
   # fastcgi_pass unix:/run/php-fpm/php8.2-fpm.sock;
+  # fastcgi_pass unix:/run/php-fpm/php8.1-fpm.sock;
   # fastcgi_pass 127.0.0.1:9000;
 }
 
 upstream php-fpm {
   server unix:/var/run/php-fpm/<appname>_pool.sock
+  # server unix:/var/run/php-fpm/<appname>_pool.php8.1-fpm.sock
+  # server unix:/run/php-fpm/php8.1-fpm.sock;
   # server unix:/run/php-fpm/php8.2-fpm.sock;
 }
 ```
