@@ -186,7 +186,7 @@ sudo firewall-cmd --add-icmp-block=echo-reply
 # Remove
 sudo firewall-cmd --remove-icmp-block=<icmptype>
 sudo firewall-cmd --remove-icmp-block=echo-reply
-# Block all (nie działa dla echo-reply)
+# Block all (nie działa dla echo-reply chyba że no to yes :buahahah)
 sudo firewall-cmd --add-icmp-block-inversion
 sudo firewall-cmd --runtime-to-permanent
 
