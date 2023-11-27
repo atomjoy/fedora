@@ -62,13 +62,14 @@ sudo useradd -r -s /bin/false <appname>_app
 # sudo chsh -s /bin/nologin <appname>_app
 ```
 
-### Backup old PHP-FPM pool config or copy to new app config
+### Backup old PHP-FPM pool config and copy to new app config
 
 ```sh
 sudo mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.back
+sudo cp /etc/php-fpm.d/www.conf.back /etc/php-fpm.d/<appname>.conf
 ```
 
-### Create a custom pool config
+### Edit a custom pool config
 
 An appname.conf file unique for each application
 
