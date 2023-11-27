@@ -181,13 +181,20 @@ nano /etc/nginx/conf.d/<appname>_app.conf
 
 ```sh
 server {
+    disable_symlinks off;
+    client_max_body_size 100M;
+    source_charset utf-8;
+    charset utf-8;
+
     listen 80;
     server_name <appname_app.example.com>;
     root /app/web/<appname>_app;
     index index.php index.html;
 
-    access_log /var/log/nginx/<appname>_app.access.log;
-    error_log /var/log/nginx/<appname>_app.error.log;
+    location / {
+      # try_files $uri $uri/ =404;
+      try_files $uri $uri/ /index.php$is_args$args;
+    }
 
     location ~ \.php$ {        
         try_files $uri =404;
@@ -197,10 +204,21 @@ server {
         include fastcgi_params;
     }
 
+    # Short
+    # location ~ \.php$ {
+    #  include snippets/fastcgi-php.conf;
+    #  fastcgi_pass unix:/var/run/php-fpm/<appname>_pool.sock;
+    #  # fastcgi_pass 127.0.0.1:9000;
+    # }
+
     location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        # expires -1;
         expires max;
         log_not_found off;
     }
+
+    access_log /var/log/nginx/<appname>_app.access.log;
+    error_log /var/log/nginx/<appname>_app.error.log;    
 }
 ```
 
