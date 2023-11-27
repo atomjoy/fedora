@@ -187,6 +187,8 @@ server {
     charset utf-8;
 
     listen 80;
+    listen [::]:80;
+
     server_name <appname_app.example.com>;
     root /app/web/<appname>_app;
     index index.php index.html;
