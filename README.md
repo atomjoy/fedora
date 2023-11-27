@@ -268,6 +268,8 @@ sudo systemctl restart nginx
 
 You can remove **firewall-cmd** and install **ufw** or use **iptables-services**
 
+### Firewalld
+
 ```sh
 # Disable and remove
 sudo systemctl stop firewalld
@@ -314,9 +316,43 @@ sudo firewall-cmd --runtime-to-permanent
 sudo firewall-cmd --permanent --add-port=3306/tcp
 sudo firewall-cmd --permanent --remove-port=3306/tcp
 sudo firewall-cmd --runtime-to-permanent
+```
 
-# Or with
-# sudo iptables -A INPUT -p tcp --dport 3306 -m state --state NEW,ESTABLISHED -j ACCEPT
+### Iptables
+
+```sh
+sudo echo "Stopping firewall and allowing everyone"
+sudo iptables -P INPUT ACCEPT
+sudo iptables -P FORWARD ACCEPT
+sudo iptables -P OUTPUT ACCEPT
+sudo iptables -F
+sudo iptables -X
+sudo iptables -t nat -F
+sudo iptables -t nat -X
+sudo iptables -t mangle -F
+sudo iptables -t mangle -X
+sudo echo "Runing firewall and droping all incoming"
+sudo iptables -I INPUT 1 -i lo -j ACCEPT
+sudo iptables -I INPUT 2 -p tcp --dport 3306 -m state --state NEW,ESTABLISHED -j ACCEPT
+# sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+# sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+# sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
+sudo iptables -A INPUT -j DROP
+sudo iptables -A FORWARD -j DROP
+sudo iptables -A OUTPUT -j ACCEPT
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -P OUTPUT ACCEPT
+```
+
+### Firewall list rules
+
+```sh
+sudo iptables -L -n -v | more
+sudo iptables -t filter -L -n -v --line-numbers
+sudo iptables -t nat -L -n -v --line-numbers
+sudo iptables -t raw -L -n -v --line-numbers
 ```
 
 ### Firewall remove rules
