@@ -170,7 +170,8 @@ sudo usermod -aG <appname>_app <username>
 # Show
 ls -ld /app/web/<appname>_app
 
-# At this point, all members of the <appname>_app group can create and edit files in the /app/web/<appname>_app/ directory without the administrator having to change file permissions every time users write new files.
+# At this point, all members of the <appname>_app group can create and edit files in the /app/web/<appname>_app/
+# directory without the administrator having to change file permissions every time users write new files.
 ```
 
 ### Create app virtualhost file
@@ -258,9 +259,14 @@ sudo userdel -r <username>
 
 ## Firewall desktop
 
-<https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/sec-using_firewalls>
+You can remove **firewall-cmd** and install **ufw** or use **iptables-services**
 
 ```sh
+# Disable and remove
+sudo systemctl stop firewalld
+sudo systemctl disable firewalld
+sudo dnf remove firewalld
+
 # Run
 sudo dnf install firewalld
 sudo systemctl status firewalld
