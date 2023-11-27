@@ -1,5 +1,15 @@
 # Fedora 39
 
+## Install Workstation Live
+
+You need to add Efi Partition with mount point /boot/efi or the system will not install (disk errors)
+
+```sh
+Efi (required partition) at least 1GB mount point: /boot/efi
+Root (required partition) at least 20GB mount point: / 
+Swap (optional) at least 2GB (2 x RAM) /swap
+```
+
 ## Boot grub
 
 Boot iso with windows
