@@ -1,4 +1,6 @@
-# Fedora 39
+# Fedora 39 Desktop
+
+Installing and configuring Fedora 39 Workstation with Windows 10.
 
 ## Install Workstation Live
 
@@ -12,7 +14,7 @@ Swap (optional) at least 2GB (2 x RAM) /swap
 
 ## Boot grub
 
-Boot iso with windows
+Boot iso with Windows
 
 ### Set grub auto save
 
