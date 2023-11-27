@@ -38,18 +38,26 @@ sudo dnf install nginx
 sudo dnf install php-fpm php-cli
 sudo dnf install mariadb-server
 sudo systemctl enable mariadb
-# optional set firewall ban on port 3306
+
+# Secure mysql server or set firewall ban on port 3306
 # sudo mysql_secure_installation
-# Login mysql
-# sudo mysql -u root -p
+
+# Login to mysql with pass
+sudo mysql -u root -p
 ```
 
-### Add user group for the application
+### Add user and group for the application
+
+Create user and group without login
 
 ```sh
-sudo groupadd <appname>_app
-sudo useradd -g <appname>_app <appname>_app
-sudo chsh -s /bin/nologin <appname>_app
+# User, group, no-home, no-login
+sudo useradd -r -s /bin/false <appname>_app
+
+# Or long version
+# sudo groupadd <appname>_app
+# sudo useradd -g <appname>_app <appname>_app
+# sudo chsh -s /bin/nologin <appname>_app
 ```
 
 ### Backup old PHP-FPM pool config or copy to new app config
@@ -58,9 +66,17 @@ sudo chsh -s /bin/nologin <appname>_app
 sudo mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.back
 ```
 
-### Create a custom pool config : sudo nano /etc/php-fpm.d/appname.conf
+### Create a custom pool config
 
-Plik appname.conf unikalny dla każdej aplikacji
+An appname.conf file unique for each application
+
+```sh
+sudo nano /etc/php-fpm.d/<appname>.conf
+```
+
+### Edit config file
+
+Create first linux user and group <appname>_app if not exists
 
 ```sh
 [<appname>_pool]
@@ -155,6 +171,46 @@ ls -ld /app/web/<appname>_app
 # At this point, all members of the <appname>_app group can create and edit files in the /app/web/<appname>_app/ directory without the administrator having to change file permissions every time users write new files.
 ```
 
+### Create app virtualhost file
+
+```sh
+nano /etc/nginx/conf.d/<appname>_app.conf
+```
+
+### Edit virtualhost file
+
+```sh
+server {
+    listen 80;
+    server_name <appname_app.example.com>;
+    root /app/web/<appname>_app;
+    index index.php index.html;
+
+    access_log /var/log/nginx/<appname>_app.access.log;
+    error_log /var/log/nginx/<appname>_app.error.log;
+
+    location ~ \.php$ {        
+        try_files $uri =404;
+        fastcgi_pass unix:/var/run/php-fpm/<appname>_pool.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg)$ {
+        expires max;
+        log_not_found off;
+    }
+}
+```
+
+### Test config and restart nginx
+
+```sh
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
 ## User groups
 
 ```sh
@@ -173,6 +229,9 @@ sudo usermod -aG <group>,<group1>,<group2> <username>
 
 # Remove user from group
 sudo gpasswd -d <username> <group>
+
+# Remove user
+sudo userdel -r <username>
 ```
 
 ## Firewall desktop
