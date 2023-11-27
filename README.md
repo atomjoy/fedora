@@ -333,10 +333,12 @@ sudo iptables -t mangle -F
 sudo iptables -t mangle -X
 sudo echo "Runing firewall and droping all incoming"
 sudo iptables -I INPUT 1 -i lo -j ACCEPT
-sudo iptables -I INPUT 2 -p tcp --dport 3306 -m state --state NEW,ESTABLISHED -j ACCEPT
+sudo iptables -I INPUT 2 -m state --state ESTABLISHED,RELATED -j ACCEPT
 # sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+# sudo iptables -A INPUT -p tcp --dport 25 -j ACCEPT
 # sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
 # sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+# sudo iptables -A INPUT -p tcp --dport 3306 -j ACCEPT
 sudo iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
 sudo iptables -A INPUT -j DROP
 sudo iptables -A FORWARD -j DROP
