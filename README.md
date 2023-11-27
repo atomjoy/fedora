@@ -31,6 +31,33 @@ GRUB_SAVEDEFAULT=true
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 ```
 
+## User and groups
+
+```sh
+# Show
+id  <username>
+groups <username>
+
+# Create system user no-login
+sudo useradd -r -s /bin/false <username>
+
+# Create user with home dir
+sudo useradd -m <username>
+
+# Set password
+sudo passwd <username>
+
+# Add user to group
+sudo usermod -aG <group> <username>
+sudo usermod -aG <group>,<group1>,<group2> <username>
+
+# Remove user from group
+sudo gpasswd -d <username> <group>
+
+# Remove user
+sudo userdel -r <username>
+```
+
 ## LEMP
 
 ### Install Nginx, Php
@@ -50,23 +77,25 @@ sudo mysql -u root -p
 
 ### Add user and group for the application
 
-Create user and group without login
+Create user and group with no-login and no-home dir
 
 ```sh
-# User, group, no-home, no-login
+# System user
 sudo useradd -r -s /bin/false <appname>_app
 
-# Or long version
-# sudo groupadd <appname>_app
-# sudo useradd -g <appname>_app <appname>_app
-# sudo chsh -s /bin/nologin <appname>_app
+# Normal user
+sudo groupadd <appname>_app
+sudo useradd -s /bin/false -g <appname>_app <appname>_app
+
+# Change bash
+sudo chsh -s /bin/nologin <appname>_app
 ```
 
 ### Backup old PHP-FPM pool config and copy to new app config
 
 ```sh
 sudo mv /etc/php-fpm.d/www.conf /etc/php-fpm.d/www.conf.back
-sudo cp /etc/php-fpm.d/www.conf.back /etc/php-fpm.d/<appname>.conf
+sudo cp -v /etc/php-fpm.d/www.conf.back /etc/php-fpm.d/<appname>.conf
 ```
 
 ### Edit a custom pool config
@@ -233,29 +262,6 @@ server {
 ```sh
 sudo nginx -t
 sudo systemctl restart nginx
-```
-
-## User groups
-
-```sh
-# Show
-groups <username>
-
-# Create user
-sudo useradd -m dummy
-
-# Set password
-sudo passwd dummy
-
-# Add user to group
-sudo usermod -aG <group> <username>
-sudo usermod -aG <group>,<group1>,<group2> <username>
-
-# Remove user from group
-sudo gpasswd -d <username> <group>
-
-# Remove user
-sudo userdel -r <username>
 ```
 
 ## Firewall desktop
