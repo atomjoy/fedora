@@ -2,6 +2,8 @@
 
 ## Kopiowanie linji
 
+File > Preferences > Keyboard Shortcuts > and search Copy Line Down / Up
+
 ```sh
 Ctrl+Shift+Alt+Down and Ctrl+Shift+Alt+Up
 ```
