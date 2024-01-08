@@ -22,6 +22,7 @@ Boot iso with Windows
 sudo nano /etc/default/grub
 
 # Add
+GRUB_DEFAULT=saved
 GRUB_SAVEDEFAULT=true
 ```
 
@@ -29,6 +30,7 @@ GRUB_SAVEDEFAULT=true
 
 ```sh
 sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+sudo grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
 ## User and groups
